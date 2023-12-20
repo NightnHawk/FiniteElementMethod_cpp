@@ -2,9 +2,10 @@
 // Created by grzeg on 19.12.2023.
 //
 
-#include "SOE.h"
+#include "../headers/SOE.h"
 
 std::vector<double> SOE::solve(Grid &grid) {
+    soe.full(0.0);
     int lastIndex = soe.getRow(0).size() - 1;
     for(const auto &element: grid.getElements()) {
         auto H_ = element.getHMatrix() + element.getHbcMatrix() + element.getCMatrix() * (1.0 / grid.getGlobalData().getValue(
@@ -37,13 +38,13 @@ std::vector<double> SOE::solve(Grid &grid) {
 void SOE::generate_vtk(Grid &grid, std::string nameSchema) {
     int nNodes = grid.getGlobalData().getValue(static_cast<int>(Simulation::Nodes));
     int nElements = grid.getGlobalData().getValue(static_cast<int>(Simulation::Elements));
-    double d_tau = 5;//grid.getGlobalData().getValue(static_cast<int>(Simulation::SimulationStepTime));
-    double t = 600;//grid.getGlobalData().getValue(static_cast<int>(Simulation::SimulationTime));
-    unsigned int iter_max = (t / d_tau) + 1;
+    double dt0 = grid.getGlobalData().getValue(static_cast<int>(Simulation::SimulationStepTime));
+    double t = grid.getGlobalData().getValue(static_cast<int>(Simulation::SimulationTime));
+    unsigned int iter_max = (t / dt0) + 1;
     for(int i = 0; i < iter_max; i++) {
+        double d_tau = (1 + i) * dt0;
         auto nodes = grid.getNodes();
         auto elements = grid.getElements();
-        //print to file
         std::filesystem::create_directories("../vtk/" + nameSchema);
         std::ofstream newFile("../vtk/" + nameSchema + "/" + nameSchema + "_" + std::to_string(i) + ".vtk");
         newFile << "# vtk DataFile Version 2.0" << std::endl;

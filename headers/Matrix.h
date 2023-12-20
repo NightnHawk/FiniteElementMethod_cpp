@@ -71,7 +71,7 @@ public:
         }
 
         if (rows == 1) {
-            return data[0][0]; // Base case for 1x1 matrix
+            return data[0][0];
         } else {
             T det = static_cast<T>(0);
             int sign = 1;
@@ -242,6 +242,59 @@ public:
         }
 
         return solution;
+    }
+
+    static std::vector<T> gaussJordan(Matrix<T> &inputMatrix) {
+        auto matrix = inputMatrix.data;
+        int n = matrix.size();
+
+        for (int i = 0; i < n; i++) {
+            // Find pivot row
+            int pivot = i;
+            for (int j = i + 1; j < n; j++) {
+                if (abs(matrix[j][i]) > abs(matrix[pivot][i])) {
+                    pivot = j;
+                }
+            }
+
+            if (abs(matrix[pivot][i]) < 1e-10) {
+                // Matrix is singular or nearly singular
+                continue;
+            }
+
+            // Swap rows
+            swap(matrix[i], matrix[pivot]);
+
+            // Make the diagonal element 1
+            double divisor = matrix[i][i];
+            for (int j = i; j < n + 1; j++) {
+                matrix[i][j] /= divisor;
+            }
+
+            // Eliminate other elements
+            for (int j = 0; j < n; j++) {
+                if (i != j) {
+                    double factor = matrix[j][i];
+                    for (int k = i; k < n + 1; k++) {
+                        matrix[j][k] -= factor * matrix[i][k];
+                    }
+                }
+            }
+        }
+        // Extract solution
+        std::vector<double> solution;
+        for (int i = 0; i < n; ++i) {
+            solution.push_back(matrix[i][n]);
+        }
+
+        return solution;
+    }
+
+    void full(T value) {
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < cols; j++)
+                data[i][j] = value;
+        }
     }
 };
 

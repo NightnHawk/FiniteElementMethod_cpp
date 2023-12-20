@@ -8,8 +8,8 @@
 
 #include <fstream>
 #include <filesystem>
-#include "headers/Matrix.h"
-#include "headers/Grid.h"
+#include "Matrix.h"
+#include "Grid.h"
 
 class SOE {
 private:

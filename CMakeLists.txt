@@ -3,7 +3,7 @@ project(FEM)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(FEM src/main.cpp
+add_executable(FEM main.cpp
         headers/Matrix.h
         src/Node.cpp
         headers/Node.h
@@ -23,6 +23,6 @@ add_executable(FEM src/main.cpp
         headers/GlobalData.h
         src/Grid.cpp
         headers/Grid.h
-        SOE.cpp
-        SOE.h
+        src/SOE.cpp
+        headers/SOE.h
 )
