@@ -73,7 +73,8 @@ void Parser::parseFile(const std::string &path, Grid &grid, bool print) {
             double y = std::stod(token);
 
             // Assuming z-coordinate and temp are default initialized to 0
-            Node newNode(id, x, y, 0.0, 0.0, NULL); // Create a new Node object
+            double init = globalData.getValue(static_cast<int>(Simulation::InitialTemp));
+            Node newNode(id, x, y, 0.0, init, NULL); // Create a new Node object
             nodes.push_back(newNode); // Add the Node to the vector
 
             if(print)

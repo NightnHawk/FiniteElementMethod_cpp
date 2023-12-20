@@ -28,8 +28,6 @@ void Grid::setLocalNodelists() {
 void Grid::calculateAll(int n) {
     UniversalElement universalElement = UniversalElement(n);
     setLocalNodelists();
-    for(int i = 0; i < nodes.size(); i++)
-        nodes[i].setTemp(globalData.getValue(static_cast<int>(Simulation::InitialTemp)));
     for(int i = 0; i < elements.size(); i++) {
         auto jacob =  elements[i].jacobian(universalElement, elements[i].getNodes());
         elements[i].calculate_H(universalElement, jacob, globalData.getValue(
@@ -42,7 +40,7 @@ void Grid::calculateAll(int n) {
     }
 }
 
-const std::vector<Node> &Grid::getNodes() const {
+std::vector<Node> &Grid::getNodes() {
     return nodes;
 }
 
@@ -50,7 +48,7 @@ void Grid::setNodes(const std::vector<Node> &nodes) {
     Grid::nodes = nodes;
 }
 
-const std::vector<Element> &Grid::getElements() const {
+std::vector<Element> &Grid::getElements() {
     return elements;
 }
 
@@ -69,7 +67,7 @@ void Grid::print() {
     }
 }
 
-const GlobalData &Grid::getGlobalData() const {
+GlobalData &Grid::getGlobalData() {
     return globalData;
 }
 

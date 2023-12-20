@@ -73,3 +73,4 @@ std::ostream &operator<<(std::ostream &os, const Node &node) {
     << std::to_string(node.temp) << " C\nBC: " << std::to_string(node.BC);
     return os;
 }
+

@@ -26,15 +26,15 @@ public:
 
     void calculateAll(int n);
 
-    const std::vector<Node> &getNodes() const;
+    std::vector<Node> &getNodes();
 
     void setNodes(const std::vector<Node> &nodes);
 
-    const std::vector<Element> &getElements() const;
+    std::vector<Element> &getElements();
 
     void setElements(const std::vector<Element> &elements);
 
-    const GlobalData &getGlobalData() const;
+    GlobalData &getGlobalData();
 
     void setGlobalData(const GlobalData &globalData);
 
