@@ -8,76 +8,12 @@
 
 int main() {
     Grid grid;
-    Parser::parseFile("../mesh/Test2_4_4_MixGrid.txt", grid, false);
+    Parser::parseFile("../mesh/Test3_31_31_kwadrat.txt", grid, false);
     grid.calculateAll(2);
     grid.print();
 
     SOE solver = SOE(grid.getNodes().size());
-    auto solution = solver.solve(grid);
-    for(auto sol: solution) {
-        std::cout << sol << " ";
-    }
-    std::cout << std::endl << std::endl;
-
-    solution = solver.solve(grid);
-    for(auto sol: solution) {
-        std::cout << sol << " ";
-    }
-    std::cout << std::endl << std::endl;
-
-    solution = solver.solve(grid);
-    for(auto sol: solution) {
-        std::cout << sol << " ";
-    }
-    std::cout << std::endl << std::endl;
-
-    solution = solver.solve(grid);
-    for(auto sol: solution) {
-        std::cout << sol << " ";
-    }
-    std::cout << std::endl << std::endl;
-
-    solution = solver.solve(grid);
-    for(auto sol: solution) {
-        std::cout << sol << " ";
-    }
-    std::cout << std::endl << std::endl;
-
-    solution = solver.solve(grid);
-    for(auto sol: solution) {
-        std::cout << sol << " ";
-    }
-    std::cout << std::endl << std::endl;
-
-    solution = solver.solve(grid);
-    for(auto sol: solution) {
-        std::cout << sol << " ";
-    }
-    std::cout << std::endl << std::endl;
-
-    solution = solver.solve(grid);
-    for(auto sol: solution) {
-        std::cout << sol << " ";
-    }
-    std::cout << std::endl << std::endl;
-
-    solution = solver.solve(grid);
-    for(auto sol: solution) {
-        std::cout << sol << " ";
-    }
-    std::cout << std::endl << std::endl;
-
-    solution = solver.solve(grid);
-    for(auto sol: solution) {
-        std::cout << sol << " ";
-    }
-    std::cout << std::endl << std::endl;
-
-    solution = solver.solve(grid);
-    for(auto sol: solution) {
-        std::cout << sol << " ";
-    }
-//    solver.generate_vtk(grid, "Square");
+    solver.generate_vtk(grid, "presentation");
 
     return 0;
 }

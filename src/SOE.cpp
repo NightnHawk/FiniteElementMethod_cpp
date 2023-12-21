@@ -26,7 +26,7 @@ std::vector<double> SOE::solve(Grid &grid) {
         }
     }
 
-    auto result = Matrix<double>::solveEquations(soe);
+    auto result = Matrix<double>::gaussJordan(soe);
 
     for(int i = 0; i < result.size(); i++) {
         grid.getNodes()[i].setTemp(result[i]);
@@ -38,11 +38,10 @@ std::vector<double> SOE::solve(Grid &grid) {
 void SOE::generate_vtk(Grid &grid, std::string nameSchema) {
     int nNodes = grid.getGlobalData().getValue(static_cast<int>(Simulation::Nodes));
     int nElements = grid.getGlobalData().getValue(static_cast<int>(Simulation::Elements));
-    double dt0 = grid.getGlobalData().getValue(static_cast<int>(Simulation::SimulationStepTime));
+    double d_tau = grid.getGlobalData().getValue(static_cast<int>(Simulation::SimulationStepTime));
     double t = grid.getGlobalData().getValue(static_cast<int>(Simulation::SimulationTime));
-    unsigned int iter_max = (t / dt0) + 1;
+    unsigned int iter_max = (t / d_tau) + 1;
     for(int i = 0; i < iter_max; i++) {
-        double d_tau = (1 + i) * dt0;
         auto nodes = grid.getNodes();
         auto elements = grid.getElements();
         std::filesystem::create_directories("../vtk/" + nameSchema);

@@ -18,7 +18,7 @@
 class Parser {
 
 public:
-    static std::string getLastWord(const std:: string &line);
+    static std::string getLastWord(const std::string &line);
 
     static void parseFile(const std::string &path, Grid &grid, bool print=false);
 };

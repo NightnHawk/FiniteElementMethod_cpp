@@ -214,7 +214,9 @@ void Element::calculate_BC(UniversalElement universalElement, double alpha, doub
         for (int i = 1; i < universalElement.n; i++) {
 //                surface_row = sur.surface_tab[surface].getRow(i);
             resultHbc = resultHbc + (Matrix<double>::outerProduct(sur.surface_tab[surface].getRow(i), sur.surface_tab[surface].getRow(i)) * alpha * weights[i]);
-            resultP = Matrix<double>::sumVec(resultP, Matrix<double>::vecMultiplyScalar(sur.surface_tab[surface].getRow(i), alpha * weights[i] * t_amb));
+            resultP = Matrix<double>::vecSum(resultP,
+                                             Matrix<double>::vecMultiplyScalar(sur.surface_tab[surface].getRow(i),
+                                                                               alpha * weights[i] * t_amb));
         }
 
         Hbc.push_back(resultHbc);
@@ -228,7 +230,7 @@ void Element::calculate_BC(UniversalElement universalElement, double alpha, doub
         Hbc_result = Hbc_result + matrix;
     }
     for (auto vec : P) {
-        P_result = Matrix<double>::sumVec(P_result, vec);
+        P_result = Matrix<double>::vecSum(P_result, vec);
     }
 
     setHbcMatrix(Hbc_result * (L / 2.0));

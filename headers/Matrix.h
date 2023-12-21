@@ -18,7 +18,9 @@ private:
 
 public:
     Matrix(size_t numRows, size_t numCols, const T &initialValue = T())
-        : rows(numRows), cols(numCols), data(numRows, std::vector<T>(numCols, initialValue)) {}
+        : rows(numRows), cols(numCols), data(numRows, std::vector<T>(numCols, initialValue)) {};
+
+    // Getter-y
 
     [[nodiscard]] size_t numRows() const {
         return rows;
@@ -28,17 +30,8 @@ public:
         return cols;
     }
 
-    T& operator()(size_t row, size_t col) {
-        return data[row][col];
-    }
-
-    void print() const {
-        for(size_t i = 0; i < rows; i++) {
-            for(size_t j = 0; j < cols; j++) {
-                std::cout << std::to_string(data[i][j]) << " ";
-            }
-            std::cout << std::endl;
-        }
+    std::vector<T> getRow(size_t index) const {
+        return data[index];
     }
 
     std::vector<std::vector<T>> getSubMatrix(size_t excludeRow, size_t excludeCol) const {
@@ -60,9 +53,95 @@ public:
         return subMat;
     }
 
-    std::vector<T> getRow(size_t index) const {
-        return data[index];
+    // Setter-y
+
+    void full(T value) {
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < cols; j++)
+                data[i][j] = value;
+        }
     }
+
+    // Operatory
+
+    T& operator()(size_t row, size_t col) {
+        return data[row][col];
+    }
+
+    Matrix<T> operator+(const Matrix<T>& other) const {
+        if(rows != other.rows or cols != other.cols) {
+            std::string error_message = "Matrices must have the same dimensions for addition. dim(A) = (" +
+                                        std::to_string(rows) + ", " + std::to_string(cols) + ") != dim(B) = (" +
+                                        std::to_string(other.rows) + ", " + std::to_string(other.cols) + ")";
+            throw std::invalid_argument(error_message);
+        }
+
+        Matrix<T> result(rows, cols);
+        for(size_t i = 0; i < rows; i++)
+            for(size_t j = 0; j < cols; j++)
+                result(i, j) = data[i][j] + other.data[i][j];
+
+        return result;
+    }
+
+    Matrix<T> operator-(const Matrix<T>& other) const {
+        if (rows != other.rows || cols != other.cols) {
+            std::string error_message = "Matrices must have the same dimensions for subtraction. dim(A) = (" +
+                                        std::to_string(rows) + ", " + std::to_string(cols) + ") != dim(B) = (" +
+                                        std::to_string(other.rows) + ", " + std::to_string(other.cols) + ")";
+            throw std::invalid_argument(error_message);
+        }
+
+        Matrix<T> result(rows, cols);
+        for (size_t i = 0; i < rows; i++) {
+            for (size_t j = 0; j < cols; j++) {
+                result(i, j) = data[i][j] - other.data[i][j];
+            }
+        }
+        return result;
+    }
+
+    Matrix<T> operator*(const T& scalar) const {
+        Matrix<T> result(rows, cols);
+        for (size_t i = 0; i < rows; ++i) {
+            for (size_t j = 0; j < cols; ++j) {
+                result(i, j) = data[i][j] * scalar;
+            }
+        }
+
+        return result;
+    }
+
+    std::vector<T> operator*(const std::vector<T> &vec) const {
+        if (cols != vec.size()) {
+            std::string error_message = "Matrix columns must match vector size for multiplication. dim(A) = (" +
+                                        std::to_string(rows) + ", " + std::to_string(cols) + ") + dim(B) = (" +
+                                        std::to_string(vec.size()) + ")";
+            throw std::invalid_argument(error_message);
+        }
+        std::vector<T> result(rows, 0);
+
+        for (size_t i = 0; i < rows; i++) {
+            for (size_t j = 0; j < cols; j++) {
+                result[i] += data[i][j] * vec[j];
+            }
+        }
+
+        return result;
+    }
+
+    // Metody wejścia/wyjścia
+
+    void print() const {
+        for(size_t i = 0; i < rows; i++) {
+            for(size_t j = 0; j < cols; j++) {
+                std::cout << std::to_string(data[i][j]) << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    // Inne metody
 
     template<typename U = T, typename std::enable_if<std::is_same<U, float>::value || std::is_same<U, double>::value, int>::type = 0>
     T determinant() const {
@@ -93,68 +172,6 @@ public:
 
             return det;
         }
-    }
-
-    Matrix<T> operator+(const Matrix<T>& other) const {
-        if(rows != other.rows or cols != other.cols) {
-            std::string error_message = "Matrices must have the same dimensions for addition. dim(A) = (" +
-                    std::to_string(rows) + ", " + std::to_string(cols) + ") != dim(B) = (" +
-                    std::to_string(other.rows) + ", " + std::to_string(other.cols) + ")";
-            throw std::invalid_argument(error_message);
-        }
-
-        Matrix<T> result(rows, cols);
-        for(size_t i = 0; i < rows; i++)
-            for(size_t j = 0; j < cols; j++)
-                result(i, j) = data[i][j] + other.data[i][j];
-
-        return result;
-    }
-
-    Matrix<T> operator-(const Matrix<T>& other) const {
-        if (rows != other.rows || cols != other.cols) {
-            std::string error_message = "Matrices must have the same dimensions for subtraction. dim(A) = (" +
-                    std::to_string(rows) + ", " + std::to_string(cols) + ") != dim(B) = (" +
-                    std::to_string(other.rows) + ", " + std::to_string(other.cols) + ")";
-            throw std::invalid_argument(error_message);
-        }
-
-        Matrix<T> result(rows, cols);
-        for (size_t i = 0; i < rows; i++) {
-            for (size_t j = 0; j < cols; j++) {
-                result(i, j) = data[i][j] - other.data[i][j];
-            }
-        }
-        return result;
-    }
-
-    Matrix<T> operator*(const T& scalar) const {
-        Matrix<T> result(rows, cols);
-        for (size_t i = 0; i < rows; ++i) {
-            for (size_t j = 0; j < cols; ++j) {
-                result(i, j) = data[i][j] * scalar;
-            }
-        }
-
-        return result;
-    }
-
-    std::vector<T> operator*(const std::vector<T> &vec) const {
-        if (cols != vec.size()) {
-            std::string error_message = "Matrix columns must match vector size for multiplication. dim(A) = (" +
-                    std::to_string(rows) + ", " + std::to_string(cols) + ") + dim(B) = (" +
-                    std::to_string(vec.size()) + ")";
-            throw std::invalid_argument(error_message);
-        }
-        std::vector<T> result(rows, 0);
-
-        for (size_t i = 0; i < rows; i++) {
-            for (size_t j = 0; j < cols; j++) {
-                result[i] += data[i][j] * vec[j];
-            }
-        }
-
-        return result;
     }
 
     static Matrix<T> outerProduct(const std::vector<T> &vec1, const std::vector<T> &vec2) {
@@ -196,7 +213,7 @@ public:
         return flattened;
     }
 
-    static std::vector<T> vecMultiplyScalar(std::vector<double> vec, T scalar) {
+    static std::vector<T> vecMultiplyScalar(std::vector<T> vec, T scalar) {
         std::vector<T> result(vec.size());
         for(size_t i = 0; i < vec.size(); i++) {
             result[i] = vec[i] * scalar;
@@ -204,7 +221,7 @@ public:
         return result;
     }
 
-    static std::vector<T> sumVec(std::vector<T> vec1, std::vector<T> vec2) {
+    static std::vector<T> vecSum(std::vector<T> vec1, std::vector<T> vec2) {
         if(vec1.size() != vec2.size()) {
             std::string error_message = "Vectors must have the same size for summation. dim(A) = (" +
             std::to_string(vec1.size()) + ") != dim(B) = (" + std::to_string(vec2.size()) + ")";
@@ -217,61 +234,25 @@ public:
         return result;
     }
 
-    static std::vector<T> solveEquations(Matrix<T> &inputMatrix) {
-        int n = inputMatrix.numRows();
-
-        for(int i = 0; i < n; i++) {
-            T divisor = inputMatrix(i, i);
-            for(int j = i; j < n + 1; j++) {
-                inputMatrix(i, j) /= divisor;
-            }
-
-            for(int k = 0; k < n; k++) {
-                if(k != i) {
-                    T factor = inputMatrix(k, i);
-                    for(int j = i; j < n + 1; j++) {
-                        inputMatrix(k, j) -= factor * inputMatrix(i, j);
-                    }
-                }
-            }
-        }
-
-        std::vector<T> solution;
-        for(int i = 0; i < n; i++) {
-            solution.push_back(inputMatrix(i, n));
-        }
-
-        return solution;
-    }
-
     static std::vector<T> gaussJordan(Matrix<T> &inputMatrix) {
         auto matrix = inputMatrix.data;
         int n = matrix.size();
-
         for (int i = 0; i < n; i++) {
-            // Find pivot row
             int pivot = i;
             for (int j = i + 1; j < n; j++) {
                 if (abs(matrix[j][i]) > abs(matrix[pivot][i])) {
                     pivot = j;
                 }
             }
-
             if (abs(matrix[pivot][i]) < 1e-10) {
                 // Matrix is singular or nearly singular
                 continue;
             }
-
-            // Swap rows
             swap(matrix[i], matrix[pivot]);
-
-            // Make the diagonal element 1
             double divisor = matrix[i][i];
             for (int j = i; j < n + 1; j++) {
                 matrix[i][j] /= divisor;
             }
-
-            // Eliminate other elements
             for (int j = 0; j < n; j++) {
                 if (i != j) {
                     double factor = matrix[j][i];
@@ -281,20 +262,11 @@ public:
                 }
             }
         }
-        // Extract solution
         std::vector<double> solution;
         for (int i = 0; i < n; ++i) {
             solution.push_back(matrix[i][n]);
         }
-
         return solution;
-    }
-
-    void full(T value) {
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < cols; j++)
-                data[i][j] = value;
-        }
     }
 };
 

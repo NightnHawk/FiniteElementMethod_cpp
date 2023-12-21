@@ -39,9 +39,8 @@ void Parser::parseFile(const std::string &path, Grid &grid, bool print) {
             parsingElements = true;
             continue;
         } else if(line.find("*BC") != std::string::npos) {
-            std::getline(file, line); // Move to the next line after *BC
+            std::getline(file, line);
 
-            // Read the BC values
             std::istringstream bcStream(line);
             std::string bcToken;
             while (std::getline(bcStream, bcToken, ',')) {
@@ -62,20 +61,18 @@ void Parser::parseFile(const std::string &path, Grid &grid, bool print) {
             std::istringstream iss(line);
             std::string token;
 
-            // Parsing the comma-separated values for node data
-            std::getline(iss, token, ','); // Read id
+            std::getline(iss, token, ',');
             int id = std::stoi(token);
 
-            std::getline(iss, token, ','); // Read x-coordinate
+            std::getline(iss, token, ',');
             double x = std::stod(token);
 
-            std::getline(iss, token); // Read y-coordinate
+            std::getline(iss, token);
             double y = std::stod(token);
 
-            // Assuming z-coordinate and temp are default initialized to 0
             double init = globalData.getValue(static_cast<int>(Simulation::InitialTemp));
-            Node newNode(id, x, y, 0.0, init, NULL); // Create a new Node object
-            nodes.push_back(newNode); // Add the Node to the vector
+            Node newNode(id, x, y, 0.0, init, NULL);
+            nodes.push_back(newNode);
 
             if(print)
                 newNode.print();
@@ -96,7 +93,6 @@ void Parser::parseFile(const std::string &path, Grid &grid, bool print) {
                 }
             }
 
-            // Ensure there are at least 5 IDs for a valid Element
             if (elementIDs.size() >= 5) {
                 Element newElement(elementIDs[0], {elementIDs[1], elementIDs[2], elementIDs[3], elementIDs[4]});
                 elements.push_back(newElement);

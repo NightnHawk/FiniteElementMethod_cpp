@@ -25,7 +25,7 @@ public:
     static double dNxdEta(int x, double ksi);
 };
 
-
 static double (*N[])(double ksi, double eta) = {ShapeFunction::N1, ShapeFunction::N2, ShapeFunction::N3, ShapeFunction::N4};
+
 
 #endif //FEM_SHAPEFUNCTION_H

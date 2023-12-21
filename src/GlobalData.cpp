@@ -12,14 +12,14 @@ const std::vector<double> &GlobalData::getValues() const {
     return values;
 }
 
+const double &GlobalData::getValue(int index) const {
+    return values[index];
+}
+
 void GlobalData::setValues(const std::vector<double> &values) {
     GlobalData::values = values;
 }
 
 void GlobalData::setValue(int index, double value) {
     GlobalData::values[index] = value;
-}
-
-const double &GlobalData::getValue(int index) const {
-    return values[index];
 }

@@ -44,11 +44,11 @@ public:
 
     const std::vector<double> &getValues() const;
 
+    const double &getValue(int index) const;
+
     void setValues(const std::vector<double> &values);
 
     void setValue(int index, double value);
-
-    const double &getValue(int index) const;
 };
 
 
